@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app1.apps.App1Config',
+    'storages'
 ]
 
 MIDDLEWARE = [
@@ -79,6 +80,11 @@ WSGI_APPLICATION = 'project2.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
+        'NAME' : 'electricstoredb',
+        'USER' : 'suresh',
+        'PASSWORD' : 'suresh123',
+        'HOST' : 'electricstore.crnrihravwty.us-east-1.rds.amazonaws.com',
+        'PORT' : '5432',
 
     }
 }
@@ -120,7 +126,24 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/static/'
+#STATIC_URL = '/static/'
+
+AWS_ACCESS_KEY_ID = 'AKIA24OZYAPUUFEUO5WD'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'electricbucket'
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+
+AWS_LOCATION = 'static'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR,'app1/static')
+]
+STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+STATICFILES_STORAGE='storages.backends.s3boto3.S3Boto3Storage'
+DEFAULT_FILE_STORAGE = 'app1.aws_storage.DynamicFiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
